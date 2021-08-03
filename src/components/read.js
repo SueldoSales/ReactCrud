@@ -13,6 +13,28 @@ export default function Read() {
             })
     }, [])
 
+    const setData = (data) => {
+        let { id, firstName, lastName, checkbox } = data;
+        localStorage.setItem('ID', id);
+        localStorage.setItem('First Name', firstName);
+        localStorage.setItem('Last Name', lastName);
+        localStorage.setItem('Checkbox Value', checkbox)
+    }
+
+    const onDelete = (id) => {
+        axios.delete(`https://6101bac049a53700178712ad.mockapi.io/fakeData/${id}`)
+        .then(() => {
+            getData();
+        })
+    }
+
+    const getData = () => {
+        axios.get(`https://6101bac049a53700178712ad.mockapi.io/fakeData`)
+            .then((getData) => {
+                 setAPIData(getData.data);
+             })
+    }
+
     return (
         <div>
             <Table singleLine>
@@ -22,6 +44,7 @@ export default function Read() {
                         <Table.HeaderCell>Last Name</Table.HeaderCell>
                         <Table.HeaderCell>Checked</Table.HeaderCell>
                         <Table.HeaderCell>Update</Table.HeaderCell>
+                        <Table.HeaderCell>Delete</Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
 
@@ -34,9 +57,12 @@ export default function Read() {
                             <Table.Cell>{data.checkbox ? 'Checked' : 'Unchecked'}</Table.Cell>
                             <Link to='/update'>
                                 <Table.Cell> 
-                                    <Button>Update</Button>
+                                    <Button onClick={() => setData(data)}>Update</Button>
                                 </Table.Cell>
                             </Link>
+                            <Table.Cell>
+                                <Button onClick={() => onDelete(data.id)}>Delete</Button>
+                            </Table.Cell>
                         </Table.Row>
                     )})}
                 </Table.Body>
